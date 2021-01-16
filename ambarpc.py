@@ -19,6 +19,7 @@ MSG_STATUS = 7
 MSG_BATTERY = 13
 
 MSG_AUTHENTICATE = 257
+MSG_SESSION_END = 258
 MSG_PREVIEW_START = 259
 MSG_PREVIEW_STOP = 260  # 258 previously, which ends current session
 
@@ -118,7 +119,7 @@ class AmbaRPCClient(object):
         kwargs.setdefault('token', self.token)
         logger.debug('[%s] >> %r', self.address, kwargs)
 
-        self._socket.send(json.dumps(kwargs))
+        self._socket.send(json.dumps(kwargs).encode('utf-8'))
 
     def parse_message(self):
         """Parses a single message from buffer and returns it, or None if no
@@ -167,7 +168,7 @@ class AmbaRPCClient(object):
                 raise TimeoutException()
 
             try:
-                self._buffer += self._socket.recv(1024)
+                self._buffer += self._socket.recv(1024).decode('utf-8', errors='ignore')
             except socket.timeout:
                 pass
 
@@ -299,19 +300,19 @@ if __name__ == '__main__':
 
     @c.event.connect_via('vf_start')
     def vf_start(*args, **kwargs):
-        print '*** STARTING ***'
+        print('*** STARTING ***')
 
     @c.event.connect_via('vf_stop')
     def vf_stop(*args, **kwargs):
-        print '*** STOPPING ***'
+        print('*** STOPPING ***')
 
     @c.event.connect_via('video_record_complete')
     def complete(type, param):
-        print 'File saved in', param
+        print('File saved in'), param
 
     @c.event.connect
     def testing(*args, **kwargs):
-        print 'event:', args, kwargs
+        print('event:'), args, kwargs
 
     pprint.pprint(c.battery())
     c.run()

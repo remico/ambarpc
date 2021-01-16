@@ -1,5 +1,8 @@
 AmbaRPC
 =======
+:information_source: This is a fork of the original AmbaRPC repo.
+Just aligned with `python3` syntax.
+
 Simple Ambarella API (`network_message_daemon`) client. Compatible and mostly
 tested on Xiaoyi/Xiaomi Yi Camera. Client is mostly self-explanatory, with
 included example when run directly.
